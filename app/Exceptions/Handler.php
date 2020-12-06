@@ -7,7 +7,6 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
-
 class Handler extends ExceptionHandler
 {
     use ApiResponser;
@@ -56,5 +55,4 @@ class Handler extends ExceptionHandler
     {
         return parent::render($request, $exception);
     }
-
 }

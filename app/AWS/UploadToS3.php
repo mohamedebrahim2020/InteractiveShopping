@@ -4,12 +4,11 @@ namespace App\AWS;
 
 use Illuminate\Support\Facades\Storage;
 
-class UploadToS3 
+class UploadToS3
 {
 
     public function __construct()
     {
-        
     }
     public function uploadImageToS3($path, $file)
     {
@@ -19,8 +18,7 @@ class UploadToS3
         $extension = $file->getClientOriginalExtension();
         $filenametostore = $path . $filename . '_' . time() . '.' . $extension;
         Storage::disk('s3')->put($filenametostore, 'public');
-        
-        return $filenametostore;
 
+        return $filenametostore;
     }
-}    
+}
