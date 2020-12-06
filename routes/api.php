@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('/store/product',[ProductController::class, 'store']);
+Route::post('/product/store',[ProductController::class, 'store']);
 Route::post('/login', [ApiAuthController::class,'login'])->name('api.login');
 Route::post('/register',[ApiAuthController::class,'register']);
 Route::group(['middleware' => 'auth:sanctum'], function () {

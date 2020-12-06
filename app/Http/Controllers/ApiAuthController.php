@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -46,7 +47,8 @@ class ApiAuthController extends Controller
                 [
                 'status_code' => 403,
                 'Message' => 'User not found. Please check your email',
-                ], 403
+                ],
+                403
             );
         }
 
@@ -55,7 +57,8 @@ class ApiAuthController extends Controller
                 [
                 'status_code' => 403,
                 'Message' => 'Please check your email or password',
-                ], 403
+                ],
+                403
             );
         }
 
@@ -98,7 +101,8 @@ class ApiAuthController extends Controller
             'message' => 'ٌregistered Successfully',
             'user' => $user,
 
-            ], 200
+            ],
+            200
         );
     }
 
@@ -131,7 +135,6 @@ class ApiAuthController extends Controller
     public function handleProviderCallback()
     {
         $providerUser = Socialite::driver('google')->stateless()->user();
-        // $user = User::query()->firstOrNew(['email' => $providerUser->getEmail()]);
         $user = User::firstOrCreate(
             [
                 'email' => $providerUser->getEmail()
