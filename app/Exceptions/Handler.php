@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\traits\ApiResponser;
+use App\Traits\ApiResponser;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Throwable;

@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 
 class TestingController extends Controller
 {
-    public function testing(){
+    public function testing()
+    {
         echo "hima";
     }
 }
