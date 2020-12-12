@@ -3,28 +3,34 @@
 namespace App\Models;
 
 use App\AWS\UploadToS3;
+use Gloudemans\Shoppingcart\Contracts\Buyable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Product extends Model 
 {
     use HasFactory;
 
     protected $fillable = [
-        'name', 'price',
+        'name', 'price','user_id'
     ];
     public function images()
     {
         return $this->hasMany(Image::class);
     }
-    public function storeProduct($name, $price, $images)
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function storeProduct($obj)
     {
         $product = Product::create([
-            'name' => $name,
-            'price' => $price,
+            'name' => $obj->name,
+            'price' => $obj->price,
+            'user_id' => $obj->user()->id,
 
         ]);
-        foreach ($images as $image) {
+        foreach ($obj->file('image') as $image) {
             $name = $image->getClientOriginalName();
             $img = Image::create([
                 'url' => $name,
@@ -34,7 +40,20 @@ class Product extends Model
             $uploadToS3->uploadImageToS3("products/", $image);
             $product->images()->save($img);
         }
+       
 
         return $product;
+    }
+
+    public function getBuyableIdentifier($options = null) {
+        return $this->id;
+    }
+
+    public function getBuyableDescription($options = null) {
+        return $this->name;
+    }
+
+    public function getBuyablePrice($options = null) {
+        return $this->price;
     }
 }

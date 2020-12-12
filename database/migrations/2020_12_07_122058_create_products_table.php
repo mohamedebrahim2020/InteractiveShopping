@@ -19,6 +19,9 @@ class CreateProductsTable extends Migration
             $table->double('price');
             $table->double('old_price')->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')
+            ->onUpdate('cascade');
         });
     }
 
