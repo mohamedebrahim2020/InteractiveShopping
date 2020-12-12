@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
@@ -28,7 +29,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/cart/increase/{product}',[CartController::class,'increaseQuantity'])->name('increase.quantity');
     Route::get('/cart/decrease/{product}',[CartController::class,'decreaseQuantity'])->name('decrease.quantity');
     Route::get('/cart/retrieve/{identifier}',[CartController::class,'getCart']);
-
+    Route::post('/address/add',[AddressController::class,'addAddress']);
+    Route::get('/user/addresses/list',[AddressController::class,'getAddresses']);
 });
 Route::get('/redirect',[ApiAuthController::class,'redirectToProvider']);
 Route::get('/callback',[ApiAuthController::class,'handleProviderCallback']);
