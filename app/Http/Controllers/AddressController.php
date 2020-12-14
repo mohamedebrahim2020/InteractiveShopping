@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\App;
 class AddressController extends Controller
 {
     public function AddAddress(AddressRequest $request)
-    {   //dd($request->header('accept-language'));
-        App::setlocale($request->header('accept-language'));
+    {   
         $user_addresses = auth()->user()->addresses->count();
         if ($user_addresses < 5) {
             $address = Address::create(

@@ -16,7 +16,9 @@ class localization
      */
     public function handle(Request $request, Closure $next)
     {
-        // $local = ($request->hasHeader(‘X-localization’)) ? $request->header(‘X-localization’) : ‘en’;
-        // return $next($request);
+        $local = ($request->hasHeader('accept-language')) ?
+         $request->header('accept-language') : 'en';
+        app()->setLocale($local);
+        return $next($request);
     }
 }
