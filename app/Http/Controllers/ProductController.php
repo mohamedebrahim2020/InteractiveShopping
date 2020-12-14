@@ -12,9 +12,8 @@ class ProductController extends Controller
 
     public function store(Product $product, StoreProductRequest $request)
     {
-        
-        $createdProduct =  $product->storeProduct($request);    
+
+        $createdProduct =  $product->storeProduct($request);
         return response()->json($createdProduct->load('images'));
-        
     }
 }

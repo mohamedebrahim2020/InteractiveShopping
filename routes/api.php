@@ -22,15 +22,17 @@ use Laravel\Sanctum\Sanctum;
 Route::post('/login', [ApiAuthController::class,'login'])->name('api.login');
 Route::post('/register',[ApiAuthController::class,'register']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::post('/product/store',[ProductController::class, 'store']);
+    Route::post('/product',[ProductController::class, 'store']);
     Route::post('/logout',[ApiAuthController::class,'logout'])->name('api.logout');
-    Route::get('/cart/add/{product}',[CartController::class,'addToCart'])->name('add.cart');
-    Route::get('/cart/remove/{product}',[CartController::class,'removeFromCart'])->name('remove.cart');
-    Route::get('/cart/increase/{product}',[CartController::class,'increaseQuantity'])->name('increase.quantity');
-    Route::get('/cart/decrease/{product}',[CartController::class,'decreaseQuantity'])->name('decrease.quantity');
-    Route::get('/cart/retrieve/{identifier}',[CartController::class,'getCart']);
-    Route::post('/address/add',[AddressController::class,'addAddress']);
-    Route::get('/user/addresses/list',[AddressController::class,'getAddresses']);
+    Route::prefix('cart')->group(function () {
+        Route::get('add/{product}',[CartController::class,'addToCart'])->name('add.cart');
+        Route::get('remove/{product}',[CartController::class,'removeFromCart'])->name('remove.cart');
+        Route::get('product/{product}/increment',[CartController::class,'increaseQuantity'])->name('increase.quantity');
+        Route::get('product/{product}/decrement',[CartController::class,'decreaseQuantity'])->name('decrease.quantity');
+    });
+    //Route::get('/cart/retrieve/{identifier}',[CartController::class,'getCart']);
+    Route::post('/address',[AddressController::class,'addAddress']);
+    Route::get('/user/addresses',[AddressController::class,'getAddresses']);
 });
 Route::get('/redirect',[ApiAuthController::class,'redirectToProvider']);
 Route::get('/callback',[ApiAuthController::class,'handleProviderCallback']);

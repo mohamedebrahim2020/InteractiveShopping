@@ -27,17 +27,17 @@ class AddressRequest extends FormRequest
             'title' => 'required',
             'address_address' => 'required',
             'address_type' => 'required',
-          
-           
+
+
         ];
     }
 
-        public function messages()
-    {
-        return [
-            'required' =>"هذا الحقل مطلوب",
-            
-  
-        ];
-    }
+    // public function messages()
+    // {
+    //     return [
+    //     'required' => "هذا الحقل مطلوب",
+
+
+    //     ];
+    // }
 }

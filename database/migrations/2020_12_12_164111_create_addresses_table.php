@@ -17,7 +17,7 @@ class CreateAddressesTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('address_address')->nullable();
-            $table->enum('address_type', ['Home', 'Work' ,'Resort', 'Other']);
+            $table->enum('address_type', ['Home', 'Work' ,'Resort', 'Other']);//not recommended
             $table->double('address_latitude')->nullable();
             $table->double('address_longitude')->nullable();
             $table->string('address_description')->nullable();

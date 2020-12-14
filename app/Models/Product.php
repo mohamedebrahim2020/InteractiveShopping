@@ -7,7 +7,7 @@ use Gloudemans\Shoppingcart\Contracts\Buyable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model 
+class Product extends Model
 {
     use HasFactory;
 
@@ -40,20 +40,23 @@ class Product extends Model
             $uploadToS3->uploadImageToS3("products/", $image);
             $product->images()->save($img);
         }
-       
+
 
         return $product;
     }
 
-    public function getBuyableIdentifier($options = null) {
+    public function getBuyableIdentifier($options = null)
+    {
         return $this->id;
     }
 
-    public function getBuyableDescription($options = null) {
+    public function getBuyableDescription($options = null)
+    {
         return $this->name;
     }
 
-    public function getBuyablePrice($options = null) {
+    public function getBuyablePrice($options = null)
+    {
         return $this->price;
     }
 }
