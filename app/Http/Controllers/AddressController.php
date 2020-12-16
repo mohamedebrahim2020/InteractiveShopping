@@ -11,22 +11,12 @@ class AddressController extends Controller
 {
     public function AddAddress(AddressRequest $request)
     {   
+       // dd($request->all());
         $user_addresses = auth()->user()->addresses->count();
-        if ($user_addresses < 5) {
-            $address = Address::create(
-                [
-                'title' => $request->title,
-                'address_address' => $request->address_address,
-                'address_type' => $request->address_type,
-                'address_latitude' => $request->address_latitude,
-                'address_longitude' => $request->address_longitude,
-                'address_description' => $request->address_description,
-                'icon' => $request->icon,
-                'user_id' => auth()->user()->id
-
-                ]
-            );
-
+        if ($user_addresses < 7) {
+            $data = $request->all();
+            $data['user_id'] = auth()->user()->id;
+            $address = Address::create($data);
             return response()->json($address);
         } else {
             return response()->json(["error" => "can not have more than 5 addresses"], 400);

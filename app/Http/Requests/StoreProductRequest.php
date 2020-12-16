@@ -31,12 +31,5 @@ class StoreProductRequest extends FormRequest
         ];
     }
 
-    // public function messages()
-    // {
-    //     return [
-    //         'name.required' =>"",
-    //         'email.email'=>"الرجاء كتابة إيميل صحيح",
-    //         'email.exists'=>"هذا الايميل غير مسجل",
-    //     ];
-    // }
+   
 }

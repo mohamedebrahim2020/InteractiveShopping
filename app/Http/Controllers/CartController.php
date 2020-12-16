@@ -4,34 +4,37 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart as CartModel;
 use App\Models\Product;
+use App\Repository\CartRepository;
 use Gloudemans\Shoppingcart\Facades\Cart;
 
 class CartController extends Controller
 {
-    public function addToCart($product)
+    protected $cart;
+    public function __construct(CartRepository $cart)
     {
-        $cart = new CartModel($product);
-        $response = $cart->add();
+        $this->cart = $cart;
+    }
+    public function addToCart(Product $product)
+    {
+        $response = $this->cart->add($product);
         return response()->json($response);
     }
-    public function removeFromCart($product)
+    public function removeFromCart(Product $product)
     {
-        $cart = new CartModel($product);
-        $response = $cart->remove();
-        return response()->json($response);
-    }
-
-    public function increaseQuantity($product)
-    {
-        $cart = new CartModel($product);
-        $response = $cart->increase();
+        $response = $this->cart->remove($product);
         return response()->json($response);
     }
 
-    public function decreaseQuantity($product)
+    public function increaseQuantity(product $product)
     {
-        $cart = new CartModel($product);
-        $response = $cart->decrease();
+        
+        $response = $this->cart->increase($product);
+        return response()->json($response);
+    }
+
+    public function decreaseQuantity(Product $product)
+    {
+        $response = $this->cart->decrease($product);
         return response()->json($response);
     }
 
