@@ -40,46 +40,48 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        $this->reportable(
+            function (Throwable $e) {
+                //
+            }
+        );
     }
 
       /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Throwable
-     */
+       * Render an exception into an HTTP response.
+       *
+       * @param  \Illuminate\Http\Request $request
+       * @param  \Throwable               $exception
+       * @return \Symfony\Component\HttpFoundation\Response
+       *
+       * @throws \Throwable
+       */
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof ValidationException) {
-            return $this->convertValidationExceptionToResponse($exception,$request);
+            return $this->convertValidationExceptionToResponse($exception, $request);
         }
         if ($exception instanceof ModelNotFoundException) {
             $modelname = strtolower(class_basename($exception->getModel()));
-            return $this->errorResponse("no model  {$modelname} with this identifier",404);     
+            return $this->errorResponse("no model  {$modelname} with this identifier", 404);
         }
         if ($exception instanceof NotFoundHttpException) {
-           // dd($exception->getMessage());
-            return $this->errorResponse($exception->getMessage(),404);     
+            // dd($exception->getMessage());
+            return $this->errorResponse($exception->getMessage(), 404);
         }
         return parent::render($request, $exception);
     }
 
         /**
-     * Create a response object from the given validation exception.
-     *
-     * @param  \Illuminate\Validation\ValidationException  $e
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
+         * Create a response object from the given validation exception.
+         *
+         * @param  \Illuminate\Validation\ValidationException $e
+         * @param  \Illuminate\Http\Request                   $request
+         * @return \Symfony\Component\HttpFoundation\Response
+         */
     protected function convertValidationExceptionToResponse(ValidationException $e, $request)
     {
-        $errors = $e->validator->errors()->getMessages();   
-        return $this->errorResponse($errors,422);
+        $errors = $e->validator->errors()->getMessages();
+        return $this->errorResponse($errors, 422);
     }
 }

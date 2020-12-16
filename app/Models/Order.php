@@ -5,16 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Address extends Model
+class Order extends Model
 {
     use HasFactory;
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'addresses';
 
         /**
          * The attributes that are mass assignable.
@@ -22,14 +15,11 @@ class Address extends Model
          * @var array
          */
     protected $fillable = [
-        'title' ,
-        'address_address' ,
-        'address_type' ,
-        'address_latitude' ,
-        'address_longitude' ,
-        'address_description' ,
-        'icon',
-        'user_id'
+        'user_id',
+        'total_price',
+        'payment_id',
+        'address_id',
+        'delivery_at',
     ];
 
     public function user()

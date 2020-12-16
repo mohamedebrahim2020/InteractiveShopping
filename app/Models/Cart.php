@@ -20,5 +20,4 @@ class Cart extends Model
      * @var string
      */
     protected $table = 'shoppingcart';
-   
 }

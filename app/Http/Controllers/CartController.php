@@ -27,7 +27,7 @@ class CartController extends Controller
 
     public function increaseQuantity(product $product)
     {
-        
+
         $response = $this->cart->increase($product);
         return response()->json($response);
     }
@@ -40,7 +40,15 @@ class CartController extends Controller
 
     public function getCart($identifier)
     {
-        $data = Cart::instance('main')->restore($identifier);
-        dd(Cart::instance('main')->content());
+        $stored = CartModel::where('identifier', $identifier)->first();
+        $storedContent = unserialize(data_get($stored, 'content'));
+        $multiplied = $storedContent->map(
+            function ($item, $key) {
+
+                return ($item->subtotal + ($item->tax * $item->qty));
+            }
+        );
+        dd($multiplied->sum());
+        // dd($storedContent);
     }
 }

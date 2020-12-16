@@ -30,6 +30,4 @@ class StoreProductRequest extends FormRequest
             'image.*' => 'image|mimes:png'
         ];
     }
-
-   
 }

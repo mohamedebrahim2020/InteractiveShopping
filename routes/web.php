@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\TestingController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +20,5 @@ Route::get('/', function () {
 });
 
 Route::get('/index',[TestingController::class, 'testing']);
+Route::get('/cart/retrieve/{identifier}',[CartController::class,'getCart']);
 

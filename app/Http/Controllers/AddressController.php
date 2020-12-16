@@ -9,9 +9,8 @@ use Illuminate\Support\Facades\App;
 
 class AddressController extends Controller
 {
-    public function AddAddress(AddressRequest $request)
-    {   
-       // dd($request->all());
+    public function addAddress(AddressRequest $request)
+    {
         $user_addresses = auth()->user()->addresses->count();
         if ($user_addresses < 7) {
             $data = $request->all();

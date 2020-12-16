@@ -24,17 +24,21 @@ class Product extends Model
     }
     public function storeProduct($obj)
     {
-        $product = Product::create([
+        $product = Product::create(
+            [
             'name' => $obj->name,
             'price' => $obj->price,
             'user_id' => $obj->user()->id,
 
-        ]);
+            ]
+        );
         foreach ($obj->file('image') as $image) {
             $name = $image->getClientOriginalName();
-            $img = Image::create([
+            $img = Image::create(
+                [
                 'url' => $name,
-            ]);
+                ]
+            );
             $image->move(public_path() . '/storage/files', $name);
             $uploadToS3 = new UploadToS3();
             $uploadToS3->uploadImageToS3("products/", $image);
