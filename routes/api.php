@@ -21,25 +21,20 @@ use Laravel\Sanctum\Sanctum;
 */
 //->withoutMiddleware('auth:sanctum');
 Route::post('/login', [ApiAuthController::class,'login'])->name('api.login');
-Route::post('/register',[ApiAuthController::class,'register']);
+Route::post('/register', [ApiAuthController::class,'register']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::post('/product',[ProductController::class, 'store']);
-    Route::post('/logout',[ApiAuthController::class,'logout'])->name('api.logout');
+    Route::post('/product', [ProductController::class, 'store']);
+    Route::post('/logout', [ApiAuthController::class,'logout'])->name('api.logout');
     Route::prefix('cart')->group(function () {
-        Route::get('add/{product}',[CartController::class,'addToCart'])->name('add.cart');
-        Route::get('remove/{product}',[CartController::class,'removeFromCart'])->name('remove.cart');
-        Route::get('product/{product}/increment',[CartController::class,'increaseQuantity'])->name('increase.quantity');
-        Route::get('product/{product}/decrement',[CartController::class,'decreaseQuantity'])->name('decrease.quantity');
+        Route::get('add/{product}', [CartController::class,'addToCart'])->name('add.cart');
+        Route::get('remove/{product}', [CartController::class,'removeFromCart'])->name('remove.cart');
+        Route::get('product/{product}/increment', [CartController::class,'increaseQuantity'])->name('inc.quantity');
+        Route::get('product/{product}/decrement', [CartController::class,'decreaseQuantity'])->name('dec.quantity');
     });
     // Route::get('/cart/retrieve/{identifier}',[CartController::class,'getCart']);
-    Route::post('/address',[AddressController::class,'addAddress']);
-    Route::get('/user/addresses',[AddressController::class,'getAddresses']);
-    Route::post('/order',[OrderController::class,'submitOrder']);
+    Route::post('/address', [AddressController::class,'addAddress']);
+    Route::get('/user/addresses', [AddressController::class,'getAddresses']);
+    Route::post('/order', [OrderController::class,'submitOrder']);
 });
-Route::get('/redirect',[ApiAuthController::class,'redirectToProvider']);
-Route::get('/callback',[ApiAuthController::class,'handleProviderCallback']);
-
-
-
-
-
+Route::get('/redirect', [ApiAuthController::class,'redirectToProvider']);
+Route::get('/callback', [ApiAuthController::class,'handleProviderCallback']);
