@@ -118,6 +118,7 @@ return [
     'uploaded' => 'The :attribute failed to upload.',
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
+    'CheckUserCredit' => 'hima',
 
     /*
     |--------------------------------------------------------------------------
@@ -133,6 +134,9 @@ return [
     'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
+        ],
+        'payment_id' => [
+            'CheckUserCredit' => 'hima',
         ],
     ],
 

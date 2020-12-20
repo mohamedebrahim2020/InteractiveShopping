@@ -5,6 +5,7 @@ namespace App\Rules;
 use App\Models\User;
 use App\Services\BillCalculation;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Facades\Lang;
 
 class CheckUserCredit implements Rule
 {
@@ -45,6 +46,6 @@ class CheckUserCredit implements Rule
      */
     public function message()
     {
-        return 'no enough money in the credit';
+         return Lang::get('validation.required');
     }
 }
