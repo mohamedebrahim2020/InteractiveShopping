@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repositories;
 
+use App\Models\Cart;
 use Gloudemans\Shoppingcart\Facades\Cart as FacadesCart;
 
 class CartRepository
@@ -111,5 +112,17 @@ class CartRepository
         } else {
             abort(404, 'no cart ');
         }
+    }
+
+    public function cartDetails($identifier)
+    {
+        $stored = Cart::where('identifier', $identifier)->first();
+        $storedContent = unserialize(data_get($stored, 'content'));
+        $multiplied = $storedContent->map(
+            function ($item, $key) {
+                   return [$item->id,$item->price,$item->qty];
+            }
+        );
+        return $multiplied;
     }
 }
