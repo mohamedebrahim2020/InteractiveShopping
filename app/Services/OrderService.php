@@ -14,13 +14,13 @@ class OrderService
         $this->order = $order;
     }
 
-    public function placeOrder(object $data, $userId)
+    public function placeOrder(object $data, $identifier)
     {
-        $billobject = new BillCalculation($userId);
+        $billobject = new BillCalculation($identifier);
         $cartobject = new CartRepository();
-        $orderdetails = $cartobject->cartDetails($userId);
+        $orderdetails = $cartobject->cartDetails($identifier);
         $totalprice = $billobject->calculateOrderPrice();
-        $order = $this->order->saveOrder($data, $userId, $totalprice);
+        $order = $this->order->saveOrder($data, $identifier, $totalprice);
         $this->order->saveOrderDetails($order, $orderdetails);
         // Cart::instance('main')->erase($userId);
         return $order;
