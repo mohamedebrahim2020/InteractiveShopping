@@ -20,6 +20,9 @@ class Order extends Model
         'payment_id',
         'address_id',
         'delivery_at',
+        'order_status_id',
+        'cancel_reason_id',
+        'other_reason',
     ];
 
     public function user()

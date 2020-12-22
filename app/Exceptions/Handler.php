@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use App\Traits\ApiResponser;
+use BadMethodCallException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -62,10 +63,14 @@ class Handler extends ExceptionHandler
             return $this->convertValidationExceptionToResponse($exception, $request);
         }
         if ($exception instanceof ModelNotFoundException) {
-            $modelname = strtolower(class_basename($exception->getModel()));
+            $modelname = strtolower(class_basename($exception->getmodel()));
             return $this->errorResponse("no model  {$modelname} with this identifier", 404);
         }
         if ($exception instanceof NotFoundHttpException) {
+            // dd($exception->getMessage());
+            return $this->errorResponse($exception->getMessage(), 404);
+        }
+        if ($exception instanceof BadMethodCallException) {
             // dd($exception->getMessage());
             return $this->errorResponse($exception->getMessage(), 404);
         }

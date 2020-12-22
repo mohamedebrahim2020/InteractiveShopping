@@ -119,6 +119,7 @@ return [
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
     'CheckUserCredit' => 'hima',
+    'cancellation_ability' => 'you cannot cancel the order before 24hrs from delivery date',
 
     /*
     |--------------------------------------------------------------------------

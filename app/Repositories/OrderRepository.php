@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderCancellationReason;
 use App\Models\User;
 use App\Services\BillCalculation;
+use Carbon\Carbon;
 use Gloudemans\Shoppingcart\Facades\Cart as FacadesCart;
 
 class OrderRepository
@@ -21,7 +22,9 @@ class OrderRepository
             'total_price' => $totalprice,
             'payment_id' => $data->payment_id,
             'address_id' => $data->address_id,
-            'delivery_at' => date('Y-m-d H:i:s', strtotime($data->delivery_at))
+            'delivery_at' => Carbon::createFromFormat('Y-m-d H:i:s', $data->delivery_at),
+            // date('Y-m-d H:i:s', strtotime($data->delivery_at)),
+            'order_status_id' => 1,
             ]
         );
        // FacadesCart::instance('main')->erase($userId);
@@ -52,5 +55,26 @@ class OrderRepository
     {
         $reasonlists = OrderCancellationReason::all(['id','reason_desc_ar']);
         return $reasonlists;
+    }
+
+    public function updateOrderStatus(Order $order, $id)
+    {
+        $order->order_status_id = $id;
+        $order->save();
+        return $order;
+    }
+
+    public function associateCancellationReasonToOrder(Order $order, $id)
+    {
+        $order->cancel_reason_id = $id;
+        $order->save();
+        return $order;
+    }
+
+    public function associateOtherCancellationReasonToOrder(Order $order, $reason)
+    {
+        $order->other_reason = $reason;
+        $order->save();
+        return $order;
     }
 }

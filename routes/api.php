@@ -37,6 +37,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user/addresses', [AddressController::class,'getAddresses']);
     Route::post('/order', [OrderController::class,'submitOrder']);
     Route::get('/order/cancel/reasons', [OrderController::class,'listCancellationReasons']);
+    Route::post('/order/cancel', [OrderController::class,'cancelOrder']);
 });
 Route::get('/redirect', [ApiAuthController::class,'redirectToProvider']);
 Route::get('/callback', [ApiAuthController::class,'handleProviderCallback']);

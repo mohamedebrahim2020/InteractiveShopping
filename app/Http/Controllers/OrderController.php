@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CancelOrderRequest;
 use App\Http\Requests\OrderRequest;
+use App\Models\Order;
 use App\Repositories\OrderRepository;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
@@ -23,6 +25,11 @@ class OrderController extends Controller
     {
         $reasonlanguage = $request->header('Accept-Language');
         $response = $this->order->getCancellationReasons($reasonlanguage);
+        return response()->json($response);
+    }
+    public function cancelOrder(CancelOrderRequest $request)
+    {
+        $response = $this->order->cancelOrder($request);
         return response()->json($response);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Order;
 use App\Repositories\CartRepository;
 use App\Repositories\OrderRepository;
 use Gloudemans\Shoppingcart\Facades\Cart;
@@ -40,5 +41,20 @@ class OrderService
             $cancellationreasonslist = $this->order->englishCancellationReasonsList();
         }
         return $cancellationreasonslist;
+    }
+
+    public function cancelOrder($data)
+    {
+        $order = Order::findorfail($data->order_id);
+        $cancelReason = $data->cancel_reason_id;
+        $otherReason = $data->other_reason;
+        $this->order->updateOrderStatus($order, 2);
+        if ($data->cancel_reason_id != null) {
+            $cancelledordered = $this->order->associateCancellationReasonToOrder($order, $cancelReason);
+            return $cancelledordered;
+        } else {
+            $cancelledordered = $this->order->associateOtherCancellationReasonToOrder($order, $otherReason);
+            return $cancelledordered;
+        }
     }
 }
