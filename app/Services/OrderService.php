@@ -25,4 +25,20 @@ class OrderService
         // Cart::instance('main')->erase($userId);
         return $order;
     }
+
+    public function getCancellationReasons($reasonlanguage)
+    {
+        $cancellationreasonslist = $this->selectCancellationReasonsLang($reasonlanguage);
+        return $cancellationreasonslist;
+    }
+
+    public function selectCancellationReasonsLang($reasonlanguage)
+    {
+        if ($reasonlanguage == "ar") {
+            $cancellationreasonslist = $this->order->arabicCancellationReasonsList();
+        } else {
+            $cancellationreasonslist = $this->order->englishCancellationReasonsList();
+        }
+        return $cancellationreasonslist;
+    }
 }

@@ -19,4 +19,10 @@ class OrderController extends Controller
         $response = $this->order->placeOrder($request, auth()->user()->id);
         return response()->json($response);
     }
+    public function listCancellationReasons(Request $request)
+    {
+        $reasonlanguage = $request->header('Accept-Language');
+        $response = $this->order->getCancellationReasons($reasonlanguage);
+        return response()->json($response);
+    }
 }

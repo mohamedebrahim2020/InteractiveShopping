@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\OrderCancellationReason;
 use App\Models\User;
 use App\Services\BillCalculation;
 use Gloudemans\Shoppingcart\Facades\Cart as FacadesCart;
@@ -39,5 +40,17 @@ class OrderRepository
             );
         }
         return $order;
+    }
+
+    public function englishCancellationReasonsList()
+    {
+        $reasonlists = OrderCancellationReason::all(['id','reason_desc_en']);
+        return $reasonlists;
+    }
+
+    public function arabicCancellationReasonsList()
+    {
+        $reasonlists = OrderCancellationReason::all(['id','reason_desc_ar']);
+        return $reasonlists;
     }
 }
