@@ -2,20 +2,14 @@
 
 namespace App\Repositories;
 
-use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderCancellationReason;
-use App\Models\User;
-use App\Services\BillCalculation;
 use Carbon\Carbon;
-use Gloudemans\Shoppingcart\Facades\Cart as FacadesCart;
 
 class OrderRepository
 {
     public function saveOrder(object $data, $userId, $totalprice)
     {
-        // $bill = new BillCalculation($userId);
-        // $totalprice = $bill->calculateOrderPrice();
         $order = Order::create(
             [
             'user_id' =>  $userId,
@@ -23,11 +17,9 @@ class OrderRepository
             'payment_id' => $data->payment_id,
             'address_id' => $data->address_id,
             'delivery_at' => Carbon::createFromFormat('Y-m-d H:i:s', $data->delivery_at),
-            // date('Y-m-d H:i:s', strtotime($data->delivery_at)),
             'order_status_id' => 1,
             ]
         );
-       // FacadesCart::instance('main')->erase($userId);
         return $order;
     }
 
@@ -76,5 +68,25 @@ class OrderRepository
         $order->other_reason = $reason;
         $order->save();
         return $order;
+    }
+
+    public function addComment($order, $comment)
+    {
+        $order->comment = $comment;
+        $order->save();
+    }
+
+    public function addRate($order, $rate)
+    {
+        $order->rate_id = $rate;
+        $order->save();
+    }
+
+    public function attachTags($order, $tags)
+    {
+        foreach ($tags as $key => $value)
+        {
+            $order->tags()->attach($value );
+        }
     }
 }

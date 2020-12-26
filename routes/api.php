@@ -5,10 +5,9 @@ use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
-use App\Models\Order;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Sanctum\Sanctum;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -32,12 +31,21 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::put('product/{product}/increment', [CartController::class,'increaseQuantity'])->name('inc.quantity');
         Route::put('product/{product}/decrement', [CartController::class,'decreaseQuantity'])->name('dec.quantity');
     });
+    Route::prefix('address')->group(function () {
+        Route::post('/', [AddressController::class,'addAddress']);
+        Route::get('/list', [AddressController::class,'getAddresses']);
+    });
     // Route::get('/cart/retrieve/{identifier}',[CartController::class,'getCart']);
-    Route::post('/address', [AddressController::class,'addAddress']);
-    Route::get('/user/addresses', [AddressController::class,'getAddresses']);
-    Route::post('/order', [OrderController::class,'submitOrder']);
-    Route::get('/order/cancel/reasons', [OrderController::class,'listCancellationReasons']);
-    Route::post('/order/cancel', [OrderController::class,'cancelOrder']);
+
+    Route::prefix('order')->group(function () {
+        Route::post('/', [OrderController::class,'submitOrder']);
+        Route::get('/cancel/reasons', [OrderController::class,'listCancellationReasons']);
+        Route::post('/cancel', [OrderController::class,'cancelOrder']);
+        Route::get('/rates/{rate}/tags', [ReviewController::class,'getRateTags']);
+        Route::post('/{order}/review', [ReviewController::class,'reviewOrder']);
+    });
+
+    // Route::apiResources()
 });
 Route::get('/redirect', [ApiAuthController::class,'redirectToProvider']);
 Route::get('/callback', [ApiAuthController::class,'handleProviderCallback']);

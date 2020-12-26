@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CancelOrderRequest;
 use App\Http\Requests\OrderRequest;
-use App\Models\Order;
-use App\Repositories\OrderRepository;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 

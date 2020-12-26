@@ -34,4 +34,9 @@ class Order extends Model
     {
         return $this->belongsToMany(Product::class, 'order_details', 'order_id', 'product_id');
     }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'order_tag', 'order_id', 'tag_id');
+    }
 }

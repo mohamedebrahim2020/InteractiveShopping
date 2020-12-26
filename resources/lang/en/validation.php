@@ -120,6 +120,8 @@ return [
     'uuid' => 'The :attribute must be a valid UUID.',
     'CheckUserCredit' => 'hima',
     'cancellation_ability' => 'you cannot cancel the order before 24hrs from delivery date',
+    'order_status' => 'cannot review order untill it will be delivered',
+    'review_authorization' => 'user has no order authorization',
 
     /*
     |--------------------------------------------------------------------------

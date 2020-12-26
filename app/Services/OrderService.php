@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Order;
 use App\Repositories\CartRepository;
 use App\Repositories\OrderRepository;
-use Gloudemans\Shoppingcart\Facades\Cart;
 
 class OrderService
 {
