@@ -31,9 +31,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::put('product/{product}/increment', [CartController::class,'increaseQuantity'])->name('inc.quantity');
         Route::put('product/{product}/decrement', [CartController::class,'decreaseQuantity'])->name('dec.quantity');
     });
-    Route::prefix('address')->group(function () {
+    Route::prefix('addresses')->group(function () {
         Route::post('/', [AddressController::class,'addAddress']);
-        Route::get('/list', [AddressController::class,'getAddresses']);
+        Route::get('/', [AddressController::class,'getAddresses']);
     });
     // Route::get('/cart/retrieve/{identifier}',[CartController::class,'getCart']);
 
