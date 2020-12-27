@@ -16,7 +16,7 @@ class AddressController extends Controller
             $data = $request->all();
             $data['user_id'] = auth()->user()->id;
             $address = Address::create($data);
-            return response()->json($address);
+            return response()->json(null, Response::HTTP_CREATED);
         } else {
             return response()->json(__('messages.addresserror'), Response::HTTP_BAD_REQUEST);
         }
