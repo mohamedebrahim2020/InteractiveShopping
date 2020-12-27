@@ -21,8 +21,7 @@ class OrderController extends Controller
     }
     public function listCancellationReasons(Request $request)
     {
-        $reasonlanguage = $request->header('Accept-Language');
-        $response = $this->order->getCancellationReasons($reasonlanguage);
+        $response = $this->order->getCancellationReasons();
         return response()->json($response);
     }
     public function cancelOrder(CancelOrderRequest $request)

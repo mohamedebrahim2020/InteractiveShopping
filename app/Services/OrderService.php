@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Order;
 use App\Repositories\CartRepository;
 use App\Repositories\OrderRepository;
+use Illuminate\Support\Facades\App;
 
 class OrderService
 {
@@ -26,19 +27,9 @@ class OrderService
         return $order;
     }
 
-    public function getCancellationReasons($reasonlanguage)
+    public function getCancellationReasons()
     {
-        $cancellationreasonslist = $this->selectCancellationReasonsLang($reasonlanguage);
-        return $cancellationreasonslist;
-    }
-
-    public function selectCancellationReasonsLang($reasonlanguage)
-    {
-        if ($reasonlanguage == "ar") {
-            $cancellationreasonslist = $this->order->arabicCancellationReasonsList();
-        } else {
-            $cancellationreasonslist = $this->order->englishCancellationReasonsList();
-        }
+        $cancellationreasonslist = $this->order->cancellationReasonsList(App::currentLocale());
         return $cancellationreasonslist;
     }
 
@@ -48,12 +39,9 @@ class OrderService
         $cancelReason = $data->cancel_reason_id;
         $otherReason = $data->other_reason;
         $this->order->updateOrderStatus($order, 2);
-        if ($data->cancel_reason_id != null) {
-            $cancelledordered = $this->order->associateCancellationReasonToOrder($order, $cancelReason);
-            return $cancelledordered;
-        } else {
-            $cancelledordered = $this->order->associateOtherCancellationReasonToOrder($order, $otherReason);
-            return $cancelledordered;
-        }
+        ($data->cancel_reason_id != null) ?
+        $cancelledordered = $this->order->associateCancellationReasonToOrder($order, $cancelReason)
+        : $cancelledordered = $this->order->associateOtherCancellationReasonToOrder($order, $otherReason);
+        return $cancelledordered;
     }
 }

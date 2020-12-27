@@ -37,15 +37,9 @@ class OrderRepository
         return $order;
     }
 
-    public function englishCancellationReasonsList()
+    public function cancellationReasonsList($lang)
     {
-        $reasonlists = OrderCancellationReason::all(['id','reason_desc_en']);
-        return $reasonlists;
-    }
-
-    public function arabicCancellationReasonsList()
-    {
-        $reasonlists = OrderCancellationReason::all(['id','reason_desc_ar']);
+        $reasonlists = OrderCancellationReason::all(['id','reason_desc_' .$lang]);
         return $reasonlists;
     }
 

@@ -15,7 +15,7 @@ class AddressController extends Controller
         if ($user_addresses < 7) {
             $data = $request->all();
             $data['user_id'] = auth()->user()->id;
-            $address = Address::create($data);
+            Address::create($data);
             return response()->json(null, Response::HTTP_CREATED);
         } else {
             return response()->json(__('messages.addresserror'), Response::HTTP_BAD_REQUEST);

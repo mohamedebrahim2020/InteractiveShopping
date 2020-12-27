@@ -32,11 +32,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::put('product/{product}/decrement', [CartController::class,'decreaseQuantity'])->name('dec.quantity');
     });
  
-    Route::apiResource('addresses', AddressController::class)->only([
-        'index', 'store'
-    ]);
-    // Route::get('/cart/retrieve/{identifier}',[CartController::class,'getCart']);
-
+    Route::apiResource('addresses', AddressController::class)->only(['index', 'store']);
     Route::prefix('order')->group(function () {
         Route::post('/', [OrderController::class,'submitOrder']);
         Route::get('/cancel/reasons', [OrderController::class,'listCancellationReasons']);
@@ -45,7 +41,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('/{order}/review', [ReviewController::class,'reviewOrder']);
     });
 
-    // Route::apiResources()
 });
 Route::get('/redirect', [ApiAuthController::class,'redirectToProvider']);
 Route::get('/callback', [ApiAuthController::class,'handleProviderCallback']);
