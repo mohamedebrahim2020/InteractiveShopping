@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressController;
-use App\Http\Controllers\ApiAuthController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -20,11 +20,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 //->withoutMiddleware('auth:sanctum');
-Route::post('/login', [ApiAuthController::class,'login'])->name('api.login');
-Route::post('/register', [ApiAuthController::class,'register']);
+Route::post('/login', [AuthController::class,'login'])->name('api.login');
+Route::post('/register', [AuthController::class,'register']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/product', [ProductController::class, 'store']);
-    Route::post('/logout', [ApiAuthController::class,'logout'])->name('api.logout');
+    Route::post('/logout', [AuthController::class,'logout'])->name('api.logout');
     Route::prefix('cart')->group(function () {
         Route::post('add/{product}', [CartController::class,'addToCart'])->name('add.cart');
         Route::delete('remove/{product}', [CartController::class,'removeFromCart'])->name('remove.cart');
@@ -34,13 +34,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
  
     Route::apiResource('addresses', AddressController::class)->only(['index', 'store']);
     Route::prefix('order')->group(function () {
-        Route::post('/', [OrderController::class,'submitOrder']);
         Route::get('/cancel/reasons', [OrderController::class,'listCancellationReasons']);
-        Route::post('/cancel', [OrderController::class,'cancelOrder']);
+        Route::post('/cancel', [OrderController::class,'cancel']);
         Route::get('/rates/{rate}/tags', [ReviewController::class,'getRateTags']);
-        Route::post('/{order}/review', [ReviewController::class,'reviewOrder']);
+        Route::post('/{order}/review', [ReviewController::class,'review']);
     });
+    Route::apiresource('orders', OrderController::class);
 
 });
-Route::get('/redirect', [ApiAuthController::class,'redirectToProvider']);
-Route::get('/callback', [ApiAuthController::class,'handleProviderCallback']);
+Route::get('/redirect', [AuthController::class,'redirectToProvider']);
+Route::get('/callback', [AuthController::class,'handleProviderCallback']);

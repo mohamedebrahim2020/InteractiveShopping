@@ -1,14 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 
-class ApiAuthController extends Controller
+class AuthController extends Controller
 {
 
     /**
@@ -18,16 +21,8 @@ class ApiAuthController extends Controller
      * @param  Request $request
      * @return JsonResponse
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate(
-            [
-            'email' => 'email|required',
-            'password' => 'required',
-            'device_name' => 'required'
-            ]
-        );
-
         $credentials = request(['email', 'password']);
 
         if (!Auth::attempt($credentials)) {
@@ -74,47 +69,22 @@ class ApiAuthController extends Controller
         );
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $request->validate(
-            [
-            'email' => 'email|required|unique:users|string',
-            'name' => 'string|required|min:3|max:20',
-            'password' => 'required|string',
-            'device_name' => 'required|string'
-            ]
-        );
-
-        $user = User::create(
+        User::create(
             [
             'email' => $request->get('email'),
             'name' => $request->get('name'),
             'password' => Hash::make($request->get('password'))
             ]
         );
-
-        //  $token = $user->createToken($request->device_name)->plainTextToken;
-
-        return response()->json(
-            [
-            'status_code' => 200,
-            'message' => 'ٌregistered Successfully',
-            'user' => $user,
-
-            ],
-            200
-        );
+        return response()->json(null, Response::HTTP_CREATED);
     }
 
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(
-            [
-            'status_code' => 200,
-            'message' => 'Logout successful',
-            ]
-        );
+        return response()->json(null, Response::HTTP_OK);
     }
 
     /**
@@ -147,13 +117,6 @@ class ApiAuthController extends Controller
 
         $token = $user->createToken('socialite')->plainTextToken;
 
-        return response()->json(
-            [
-            'status_code' => 200,
-            'message' => 'Auth Successful',
-            'user' => $user,
-            'token' => $token
-            ]
-        );
+        return response()->json(null, Response::HTTP_OK);
     }
 }

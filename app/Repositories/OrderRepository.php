@@ -8,6 +8,16 @@ use Carbon\Carbon;
 
 class OrderRepository
 {
+    public function show($order)
+    {
+        $order = Order::findorfail($order);
+        return $order;
+    }
+
+    public function list($user)
+    {
+        return $user->orders()->paginate(3, ["id", "total_price", "order_status_id"]);
+    }
     public function saveOrder(object $data, $userId, $totalprice)
     {
         $order = Order::create(

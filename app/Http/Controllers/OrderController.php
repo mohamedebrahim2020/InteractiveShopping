@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CancelOrderRequest;
 use App\Http\Requests\OrderRequest;
+use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class OrderController extends Controller
 {
@@ -14,7 +16,12 @@ class OrderController extends Controller
     {
         $this->order = $order;
     }
-    public function submitOrder(OrderRequest $request)
+    public function index()
+    {
+        $orders = $this->order->listOrders();
+        return response()->json($orders);
+    }
+    public function store(OrderRequest $request)
     {
         $response = $this->order->placeOrder($request, auth()->user()->id);
         return response()->json($response);
@@ -24,9 +31,14 @@ class OrderController extends Controller
         $response = $this->order->getCancellationReasons();
         return response()->json($response);
     }
-    public function cancelOrder(CancelOrderRequest $request)
+    public function cancel(CancelOrderRequest $request)
     {
         $response = $this->order->cancelOrder($request);
         return response()->json($response);
+    }
+    public function show($order)
+    {
+        $order = $this->order->get($order);
+        return response()->json($order, Response::HTTP_OK);
     }
 }
