@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddressRequest;
+use App\Http\Resources\AddressResource;
 use App\Models\Address;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
+use Illuminate\Http\Response;
 
 class AddressController extends Controller
 {
-    public function addAddress(AddressRequest $request)
+    public function store(AddressRequest $request)
     {
         $user_addresses = auth()->user()->addresses->count();
         if ($user_addresses < 7) {
@@ -18,14 +18,13 @@ class AddressController extends Controller
             $address = Address::create($data);
             return response()->json($address);
         } else {
-            return response()->json(["error" => "can not have more than 5 addresses"], 400);
+            return response()->json(__('messages.addresserror'), Response::HTTP_BAD_REQUEST);
         }
     }
 
-    public function getAddresses()
+    public function index()
     {
         $user_addresses = auth()->user()->addresses->sortBy([['created_at','desc']]);
-        //UserResource::collection(User::all())
-        return response()->json($UserResource::collection($user_addresses));
+        return AddressResource::collection($user_addresses);
     }
 }
