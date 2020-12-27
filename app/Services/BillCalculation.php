@@ -18,9 +18,14 @@ class BillCalculation
         $storedContent = unserialize(data_get($stored, 'content'));
         $multiplied = $storedContent->map(
             function ($item, $key) {
-                return ($item->subtotal + ($item->tax * $item->qty));
+                return ($item->subtotal);
             }
         );
-        return $multiplied->sum();
+        return $this->calculateVat($multiplied->sum());
+    }
+
+    public function calculateVat($total)
+    {
+        return $total * 1.14 ;
     }
 }
