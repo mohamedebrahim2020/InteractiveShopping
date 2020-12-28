@@ -49,7 +49,7 @@ class OrderRepository
 
     public function cancellationReasonsList($lang)
     {
-        $reasonlists = OrderCancellationReason::all(['id','reason_desc_' .$lang]);
+        $reasonlists = OrderCancellationReason::all(['id','reason_desc_'.$lang]);
         return $reasonlists;
     }
 
