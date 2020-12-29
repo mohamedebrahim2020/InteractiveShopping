@@ -20,7 +20,7 @@ class OrderService
 
     public function get($order)
     {
-        $order = $this->order->show($order);
+        $order = $this->order->find($order);
         return new OrderResource($order);
     }
 
@@ -38,7 +38,6 @@ class OrderService
         $totalprice = $billobject->calculateOrderPrice();
         $order = $this->order->saveOrder($data, $identifier, $totalprice);
         $this->order->saveOrderDetails($order, $orderdetails);
-        // Cart::instance('main')->erase($userId);
         return $order;
     }
 
@@ -50,13 +49,9 @@ class OrderService
 
     public function cancelOrder($data)
     {
-        $order = Order::findorfail($data->order_id);
-        $cancelReason = $data->cancel_reason_id;
-        $otherReason = $data->other_reason;
-        $this->order->updateOrderStatus($order, 2);
-        ($data->cancel_reason_id != null) ?
-        $cancelledordered = $this->order->associateCancellationReasonToOrder($order, $cancelReason)
-        : $cancelledordered = $this->order->associateOtherCancellationReasonToOrder($order, $otherReason);
+        $this->order->updateOrderStatus($data->order);
+        $cancelledordered = $this->order
+        ->associateCancellationReasonToOrder($data->order, $data->cancel_reason_id, $data->other_reason);
         return $cancelledordered;
     }
 }

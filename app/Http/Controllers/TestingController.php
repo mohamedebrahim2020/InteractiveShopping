@@ -12,7 +12,7 @@ class TestingController extends Controller
 {
     public function testing(OrderRequest $request, $order)
     {
-           dd($request->order);
+         //  dd($request->order);
     //     $stored = Cart::where('identifier', 1)->first();
     //     $storedContent = unserialize(data_get($stored, 'content'));
     //     $multiplied = $storedContent->map(

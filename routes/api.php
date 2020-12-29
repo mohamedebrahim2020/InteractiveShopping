@@ -7,6 +7,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\TestingController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -50,3 +51,4 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 });
 Route::get('/redirect', [AuthController::class,'redirectToProvider']);
 Route::get('/callback', [AuthController::class,'handleProviderCallback']);
+Route::get('/index/{order}', [TestingController::class, 'testing']);

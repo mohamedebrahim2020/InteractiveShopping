@@ -15,7 +15,8 @@ class OrderRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+           dd($this->route('order'));
+        // return true;
     }
 
     /**
@@ -25,13 +26,10 @@ class OrderRequest extends FormRequest
      */
     public function rules()
     {
-       // dd($this->order);
         return [
             'order' => 'required',
             // 'payment_id' => [ new CheckDefaultPayment(), new CheckUserCredit()],
 
         ];
-
-        // dd('hima');
     }
 }

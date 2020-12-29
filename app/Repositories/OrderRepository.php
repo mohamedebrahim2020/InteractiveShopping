@@ -8,7 +8,8 @@ use Carbon\Carbon;
 
 class OrderRepository
 {
-    public function show($order)
+    public const ORDERSTATUS = 2 ;
+    public function find($order)
     {
         $order = Order::findorfail($order);
         return $order;
@@ -53,22 +54,18 @@ class OrderRepository
         return $reasonlists;
     }
 
-    public function updateOrderStatus(Order $order, $id)
+    public function updateOrderStatus(Order $order)
     {
-        $order->order_status_id = $id;
+        $order->order_status_id = self::ORDERSTATUS;
         $order->save();
         return $order;
     }
 
-    public function associateCancellationReasonToOrder(Order $order, $id)
+    public function associateCancellationReasonToOrder($order, $cancelId, $reason = null)
     {
-        $order->cancel_reason_id = $id;
-        $order->save();
-        return $order;
-    }
-
-    public function associateOtherCancellationReasonToOrder(Order $order, $reason)
-    {
+        $this->find($order);
+        $order = $this->find($order);
+        $order->cancel_reason_id = $cancelId;
         $order->other_reason = $reason;
         $order->save();
         return $order;

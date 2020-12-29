@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Order;
 use App\Rules\CheckCancellationAbility;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CancelOrderRequest extends FormRequest
@@ -14,7 +16,8 @@ class CancelOrderRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $order = Order::findorfail($this->route('order'));
+        return ($order->user_id == $this->user()->id);
     }
 
     /**
@@ -25,9 +28,8 @@ class CancelOrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'order_id' => ['required','exists:orders,id', new CheckCancellationAbility()],
-            'cancel_reason_id' => 'required_without:other_reason||nullable||exists:cancel_order_reasons,id',
-            'other_reason' => 'required_without:cancel_reason_id',
+            'cancel_reason_id' => ['required', 'exists:cancel_order_reasons,id', new CheckCancellationAbility()],
+            'other_reason' => 'required_if:cancel_reason_id,4',
         ];
     }
 }
