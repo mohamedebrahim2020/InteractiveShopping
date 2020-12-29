@@ -25,9 +25,13 @@ class OrderRequest extends FormRequest
      */
     public function rules()
     {
+       // dd($this->order);
         return [
-            'payment_id' => [ new CheckDefaultPayment(), new CheckUserCredit()],
+            'order' => 'required',
+            // 'payment_id' => [ new CheckDefaultPayment(), new CheckUserCredit()],
 
         ];
+
+        // dd('hima');
     }
 }

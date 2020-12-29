@@ -26,7 +26,7 @@ class WorkingDayRequest extends FormRequest
     {
         $days = array('Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday');
         return [
-            'day' => 'required|unique:working_days,name|in:' . implode(',', $days), 
+            'day' => 'required|unique:working_days,name|in:' . implode(',', $days),
         ];
     }
 }

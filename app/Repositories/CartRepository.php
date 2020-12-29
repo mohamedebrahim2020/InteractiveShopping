@@ -9,50 +9,27 @@ class CartRepository
 {
     public function add($product)
     {
-
-        if (FacadesCart::instance('main')->merge(auth()->user()->id) == true) {
-            $checkExist = FacadesCart::instance('main')->search(
-                function ($cartItem, $rowId) use ($product) {
-
-                    return $cartItem->id === $product->id;
-                }
-            );
-            if ($checkExist->isNotEmpty()) {
+        if (FacadesCart::instance('main')->merge(auth()->user()->id)) {
+            if ($this->checkProductExistence($product)->isNotEmpty()) {
                 abort(404, 'this product is already exist in the cart');
             } else {
                 $cartSession = FacadesCart::instance('main');
-                $cartSession->add($product->id, $product->name, 1, $product->price)->associate('\App\Models\Product');
-                $cartSession->erase(auth()->user()->id);
-                $cartSession->store(auth()->user()->id);
-                return $cartSession->content();
+                return $this->updateCartProducts($cartSession, $product, "addtostoredcart");
             }
         } else {
             $cartSession = FacadesCart::instance('main');
-            $cartSession->add($product->id, $product->name, 1, $product->price)->associate('\App\Models\Product');
-            $cartSession->store(auth()->user()->id);
-            return $cartSession->content();
+            return $this->updateCartProducts($cartSession, $product, "addtonewcart");
         }
     }
 
     public function remove($product)
     {
-        if (FacadesCart::instance('main')->merge(auth()->user()->id) == true) {
-            $checkExist = FacadesCart::instance('main')->search(
-                function ($cartItem, $rowId) use ($product) {
-                    return $cartItem->id === $product->id;
-                }
-            );
-            if ($checkExist->isEmpty()) {
+        if (FacadesCart::instance('main')->merge(auth()->user()->id)) {
+            if ($this->checkProductExistence($product)->isEmpty()) {
                 abort(404, 'this product is already not in the cart');
             } else {
                 $cartSession = FacadesCart::instance('main');
-                foreach ($checkExist as $check) {
-                    $row = $check->rowId;
-                }
-                $remove = FacadesCart::instance('main')->remove($row);
-                $cartSession->erase(auth()->user()->id);
-                $cartSession->store(auth()->user()->id);
-                return $cartSession->content();
+                return $this->updateCartProducts($cartSession, $product, "remove");
             }
         } else {
             abort(404, 'no cart ');
@@ -61,25 +38,12 @@ class CartRepository
 
     public function increase($product)
     {
-        if (FacadesCart::instance('main')->merge(auth()->user()->id) == true) {
-            $checkExist = FacadesCart::instance('main')->search(
-                function ($cartItem, $rowId) use ($product) {
-                    return $cartItem->id === $product->id;
-                }
-            );
-
-            if ($checkExist->isEmpty()) {
+        if (FacadesCart::instance('main')->merge(auth()->user()->id)) {
+            if ($this->checkProductExistence($product)->isEmpty()) {
                 abort(404, 'this product is not in the cart');
             } else {
                 $cartSession = FacadesCart::instance('main');
-                foreach ($checkExist as $check) {
-                    $row = $check->rowId;
-                    $qty = $check->qty;
-                }
-                FacadesCart::instance('main')->update($row, ++$qty);
-                $cartSession->erase(auth()->user()->id);
-                $cartSession->store(auth()->user()->id);
-                return $cartSession->content();
+                return $this->updateCartProducts($cartSession, $product, "inc");
             }
         } else {
             abort(404, 'no cart ');
@@ -88,26 +52,12 @@ class CartRepository
 
     public function decrease($product)
     {
-        if (FacadesCart::instance('main')->merge(auth()->user()->id) == true) {
-            $checkExist = FacadesCart::instance('main')->search(
-                function ($cartItem, $rowId) use ($product) {
-                    return $cartItem->id === $product->id;
-                }
-            );
-
-            if ($checkExist->isEmpty()) {
+        if (FacadesCart::instance('main')->merge(auth()->user()->id)) {
+            if ($this->checkProductExistence($product)->isEmpty()) {
                 abort(404, 'this product is already not in the cart');
             } else {
                 $cartSession = FacadesCart::instance('main');
-                foreach ($checkExist as $check) {
-                    $row = $check->rowId;
-                    $qty = $check->qty;
-                }
-                FacadesCart::instance('main')->update($row, --$qty);
-                ;
-                $cartSession->erase(auth()->user()->id);
-                $cartSession->store(auth()->user()->id);
-                return $cartSession->content();
+                return $this->updateCartProducts($cartSession, $product, "dec");
             }
         } else {
             abort(404, 'no cart ');
@@ -124,5 +74,39 @@ class CartRepository
             }
         );
         return $multiplied;
+    }
+    private function checkProductExistence($product)
+    {
+        $checkExist = FacadesCart::instance('main')->search(
+            function ($cartItem, $rowId) use ($product) {
+
+                return $cartItem->id === $product->id;
+            }
+        );
+        return $checkExist;
+    }
+    private function updateCartProducts($cartSession, $product, $action)
+    {
+        if ($action == "addtostoredcart" || $action == "addtonewcart") {
+            $cartSession->add($product->id, $product->name, 1, $product->price)->associate('\App\Models\Product');
+        }
+        if ($action == "remove" || $action == "inc" || $action == "dec") {
+            foreach ($this->checkProductExistence($product) as $check) {
+                $row = $check->rowId;
+                $qty = $check->qty;
+            }
+            if ($action == "remove") {
+                $cartSession->remove($row);
+            } elseif ($action == "inc") {
+                FacadesCart::instance('main')->update($row, ++$qty);
+            } else {
+                FacadesCart::instance('main')->update($row, --$qty);
+            }
+        }
+        if ($action != "addtonewcart") {
+            $cartSession->erase(auth()->user()->id);
+        }
+        $cartSession->store(auth()->user()->id);
+        return $cartSession->content();
     }
 }

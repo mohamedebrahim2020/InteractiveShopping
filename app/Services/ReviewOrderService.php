@@ -30,5 +30,4 @@ class ReviewOrderService
         $this->order->addRate($order, $data->rate_id);
         $this->order->attachTags($order, $data->tag_id);
     }
-
 }

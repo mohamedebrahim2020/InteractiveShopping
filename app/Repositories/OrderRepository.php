@@ -49,7 +49,7 @@ class OrderRepository
 
     public function cancellationReasonsList($lang)
     {
-        $reasonlists = OrderCancellationReason::all(['id','reason_desc_'.$lang]);
+        $reasonlists = OrderCancellationReason::all(['id','reason_desc_' . $lang]);
         return $reasonlists;
     }
 
@@ -88,9 +88,8 @@ class OrderRepository
 
     public function attachTags($order, $tags)
     {
-        foreach ($tags as $key => $value)
-        {
-            $order->tags()->attach($value );
+        foreach ($tags as $key => $value) {
+            $order->tags()->attach($value);
         }
     }
 }

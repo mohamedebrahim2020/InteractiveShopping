@@ -26,7 +26,7 @@ class OrderController extends Controller
         $response = $this->order->placeOrder($request, auth()->user()->id);
         return response()->json($response);
     }
-    public function listCancellationReasons(Request $request)
+    public function listCancellationReasons()
     {
         $response = $this->order->getCancellationReasons();
         return response()->json($response);

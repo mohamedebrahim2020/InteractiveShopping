@@ -63,14 +63,14 @@ class Handler extends ExceptionHandler
             $modelname = strtolower(class_basename($exception->getmodel()));
             return $this->errorResponse("no model  {$modelname} with this identifier", 404);
         }
-       if ($exception instanceof NotFoundHttpException) {
+        if ($exception instanceof NotFoundHttpException) {
             // dd($exception->getMessage());
             return $this->errorResponse($exception->getMessage(), 404);
         }
         if ($exception instanceof BadMethodCallException) {
             // dd($exception->getMessage());
             return $this->errorResponse($exception->getMessage(), 404);
-        } 
+        }
         // $this->invalidJson($request, $exception);
         return parent::render($request, $exception);
     }
