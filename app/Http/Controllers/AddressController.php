@@ -25,6 +25,6 @@ class AddressController extends Controller
     public function index()
     {
         $user_addresses = auth()->user()->addresses->sortBy([['created_at','desc']]);
-        return AddressResource::collection($user_addresses);
+        return response()->json(AddressResource::collection($user_addresses), Response::HTTP_OK);
     }
 }

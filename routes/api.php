@@ -45,10 +45,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::group(['prefix' => 'admin',  'middleware' => 'role:Admin'], function () {
         Route::apiResource('workdays', WorkingDayController::class)->only(['index' , 'store']);
     });
-    // Route::prefix('admin')->group(['middleware' => 'role:admin'], function () {
-    //     Route::apiResource('workdays', WorkingDayController::class)->only(['index' , 'store']);
-    // });
 });
 Route::get('/redirect', [AuthController::class,'redirectToProvider']);
 Route::get('/callback', [AuthController::class,'handleProviderCallback']);
-Route::get('/index/{order}', [TestingController::class, 'testing']);
+

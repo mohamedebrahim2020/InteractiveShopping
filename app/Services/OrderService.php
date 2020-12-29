@@ -43,7 +43,7 @@ class OrderService
 
     public function getCancellationReasons()
     {
-        $cancellationreasonslist = $this->order->cancellationReasonsList(App::currentLocale());
+        $cancellationreasonslist = $this->order->cancellationReasonsList();
         return $cancellationreasonslist;
     }
 

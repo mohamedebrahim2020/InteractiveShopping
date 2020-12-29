@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CancelOrderRequest;
 use App\Http\Requests\OrderRequest;
+use App\Http\Resources\CancellationReasonResource;
 use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class OrderController extends Controller
     public function listCancellationReasons()
     {
         $response = $this->order->getCancellationReasons();
-        return response()->json($response);
+        return response()->json(CancellationReasonResource::collection($response), Response::HTTP_OK);
     }
     public function cancel(CancelOrderRequest $request)
     {
