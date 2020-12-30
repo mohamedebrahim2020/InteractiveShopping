@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\AvoidDeliveryOnHoliday;
 use App\Rules\CheckDefaultPayment;
 use App\Rules\CheckUserCredit;
 use Illuminate\Foundation\Http\FormRequest;
@@ -15,8 +16,7 @@ class OrderRequest extends FormRequest
      */
     public function authorize()
     {
-           dd($this->route('order'));
-        // return true;
+        return true;
     }
 
     /**
@@ -27,9 +27,9 @@ class OrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'order' => 'required',
-            // 'payment_id' => [ new CheckDefaultPayment(), new CheckUserCredit()],
-
+            'payment_id' => [ new CheckDefaultPayment(), new CheckUserCredit()],
+            'address_id' => 'required',
+            'delivery_at' => new AvoidDeliveryOnHoliday(),
         ];
     }
 }

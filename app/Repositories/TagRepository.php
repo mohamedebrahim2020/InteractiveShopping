@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Rate;
 
-class ReviewOrderRepository //tags repository
+class TagRepository //tags repository
 {
     public function getRateTags(Rate $rate)
     {

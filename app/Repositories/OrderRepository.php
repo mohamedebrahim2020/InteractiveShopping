@@ -71,15 +71,10 @@ class OrderRepository
         return $order;
     }
 
-    public function addComment($order, $comment)
-    {
-        $order->comment = $comment;
-        $order->save();
-    }
-
-    public function addRate($order, $rate)
+    public function addReview($order, $rate, $comment)
     {
         $order->rate_id = $rate;
+        $order->comment = $comment;
         $order->save();
     }
 

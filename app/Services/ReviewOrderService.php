@@ -3,17 +3,17 @@
 namespace App\Services;
 
 use App\Repositories\OrderRepository;
-use App\Repositories\ReviewOrderRepository;
+use App\Repositories\TagRepository;
 
 class ReviewOrderService
 {
     protected $order;
-    protected $reviewOrder;
+    protected $tag;
 
-    public function __construct(OrderRepository $order, ReviewOrderRepository $reviewOrder)
+    public function __construct(OrderRepository $order, TagRepository $tag)
     {
         $this->order = $order;
-        $this->reviewOrder = $reviewOrder;
+        $this->tag = $tag;
     }
 
     public function getTags($rate)
@@ -24,10 +24,7 @@ class ReviewOrderService
 
     public function submitReview($order, $data)
     {
-        if ($data->comment != null) {
-            $this->order->addComment($order, $data->comment);
-        }
-        $this->order->addRate($order, $data->rate_id);
+        $this->order->addReview($order, $data->rate_id, $data->comment);
         $this->order->attachTags($order, $data->tag_id);
     }
 }
