@@ -17,7 +17,7 @@ class AddCashDefaultpaymentToUsersTable extends Migration
             $table->unsignedBigInteger('default_payment_id')->nullable();
             $table->foreign('default_payment_id')->references('id')->on('payment_method')->onDelete('set null')
             ->onUpdate('cascade');
-            $table->integer('credit');
+            $table->integer('credit')->nullable();
         });
     }
 

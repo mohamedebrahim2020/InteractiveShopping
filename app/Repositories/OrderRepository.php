@@ -71,6 +71,7 @@ class OrderRepository
         return $order;
     }
 
+
     public function addReview($order, $rate, $comment)
     {
         $order->rate_id = $rate;

@@ -28,7 +28,7 @@ class ReviewOrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'rate_id' => 'nullable||exists:rates,rank',
+h            'rate_id' => 'nullable||exists:rates,rank',
             'tag_id[]' => 'nullable||exists:tags,id',
             'comment' => 'nullable',
         ];
