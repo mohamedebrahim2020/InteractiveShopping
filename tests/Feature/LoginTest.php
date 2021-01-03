@@ -10,20 +10,31 @@ use Tests\TestCase;
 
 class LoginTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
-     * A basic feature test example.
+     * A basic feature testLogin example.
      *
      * @return void
      */
     public function testLogin()
     {
-        Sanctum::actingAs(
+        $user =  Sanctum::actingAs(
             User::factory()->create(),
             ['*']
         );
+        // dd($user->accessToken);
+        // $user->createToken($request->device_name)->plainTextToken;
         $this->withoutExceptionHandling();
-        $response = $this->get('/');
+        $response = $this->postJson('/api/login', ['email' => $user->email, 'password' => '123456789', 'device_name' => 'hima']);
+        $response->assertJsonStructure([
+            'status_code'  ,
+            'message'  ,
+            'user'  ,
+            'token'  ,
 
+        ]);
         $response->assertStatus(200);
+        $response->assertOk();
     }
 }

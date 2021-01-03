@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart as CartModel;
 use App\Models\Product;
 use App\Repositories\CartRepository;
+use Illuminate\Http\Response;
 
 class CartController extends Controller
 {
@@ -16,25 +17,25 @@ class CartController extends Controller
     public function addToCart(Product $product)
     {
         $response = $this->cart->add($product);
-        return response()->json($response);
+        return response()->json($response, Response::HTTP_CREATED);
     }
     public function removeFromCart(Product $product)
     {
         $response = $this->cart->remove($product);
-        return response()->json($response);
+        return response()->json($response, Response::HTTP_OK);
     }
 
     public function increaseQuantity(product $product)
     {
 
         $response = $this->cart->increase($product);
-        return response()->json($response);
+        return response()->json($response, Response::HTTP_OK);
     }
 
     public function decreaseQuantity(Product $product)
     {
         $response = $this->cart->decrease($product);
-        return response()->json($response);
+        return response()->json($response, Response::HTTP_OK);
     }
 
     public function getCart($identifier)

@@ -10,7 +10,6 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TestingController;
 use Illuminate\Support\Facades\Route;
 
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -33,7 +32,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::put('products/{product}/increment', [CartController::class,'increaseQuantity'])->name('inc.quantity');
         Route::put('products/{product}/decrement', [CartController::class,'decreaseQuantity'])->name('dec.quantity');
     });
- 
+
     Route::apiResource('addresses', AddressController::class)->only(['index', 'store']);
     Route::prefix('order')->group(function () {
         Route::get('/cancel/reasons', [OrderController::class,'listCancellationReasons']);
@@ -48,4 +47,3 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 });
 Route::get('/redirect', [AuthController::class,'redirectToProvider']);
 Route::get('/callback', [AuthController::class,'handleProviderCallback']);
-
