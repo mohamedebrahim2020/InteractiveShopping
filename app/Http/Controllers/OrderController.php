@@ -24,8 +24,8 @@ class OrderController extends Controller
     }
     public function store(OrderRequest $request)
     {
-        $response = $this->order->placeOrder($request, auth()->user()->id);
-        return response()->json($response);
+        $this->order->placeOrder($request, auth()->user()->id);
+        return response()->json(null, Response::HTTP_CREATED);
     }
     public function listCancellationReasons()
     {
@@ -34,8 +34,8 @@ class OrderController extends Controller
     }
     public function cancel(CancelOrderRequest $request)
     {
-        $response = $this->order->cancelOrder($request);
-        return response()->json($response);
+        $this->order->cancelOrder($request);
+        return response()->json(null, Response::HTTP_OK);
     }
     public function show($order)
     {

@@ -27,7 +27,7 @@ class OrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'payment_id' => [ new CheckDefaultPayment(), new CheckUserCredit()],
+            'payment_id' => 'exists:payment_method,id', [ new CheckDefaultPayment(), new CheckUserCredit()],
             'address_id' => 'required',
             'delivery_at' => new AvoidDeliveryOnHoliday(),
         ];

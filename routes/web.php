@@ -19,5 +19,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/index/{order}', [TestingController::class, 'testing']);
+Route::get('/index', [TestingController::class, 'testing']);
 Route::get('/cart/retrieve/{identifier}', [CartController::class,'getCart']);
