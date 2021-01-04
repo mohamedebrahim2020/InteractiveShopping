@@ -29,6 +29,7 @@ class AddressFactory extends Factory
             'address_longitude' => $this->faker->longitude ,
             'address_description' => $this->faker->text(20) ,
             'icon' => $this->faker->imageUrl,
+            'user_id' => 1,
         ];
     }
 }

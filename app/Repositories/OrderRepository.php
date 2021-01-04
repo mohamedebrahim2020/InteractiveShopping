@@ -54,8 +54,9 @@ class OrderRepository
         return $reasonlists;
     }
 
-    public function updateOrderStatus(Order $order)
+    public function updateOrderStatus($order)
     {
+        $order = $this->find($order);
         $order->order_status_id = self::ORDERSTATUS;
         $order->save();
         return $order;

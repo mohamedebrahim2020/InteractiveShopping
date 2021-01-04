@@ -39,4 +39,10 @@ class Order extends Model
     {
         return $this->belongsToMany(Tag::class, 'order_tag', 'order_id', 'tag_id');
     }
+
+    public function cancellationReason()
+    {
+        return $this->belongsTo(OrderCancellationReason::class, 'cancel_reason_id');
+    }
+
 }
