@@ -25,6 +25,20 @@ class CartTest extends TestCase
         $response->assertStatus(201);
         $response->assertSuccessful();
     }
+    public function testFailureAdd()
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        );
+        Product::factory()->create();
+        $response = $this->postJson('/api/cart/products/2');
+        $response->assertNotFound();
+        $response->assertExactJson([
+            'error' => "no model  product with this identifier",
+            'code' => 404
+        ]);
+    }
     public function testRemove()
     {
         Sanctum::actingAs(
@@ -63,6 +77,22 @@ class CartTest extends TestCase
         $response = $this->putJson('/api/cart/products/1/increment');
         $response->assertOk();
     }
+    public function testFailureIncrement()
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        );
+        Product::factory()->count(3)->create();
+        $response = $this->postJson('/api/cart/products/1');
+        $response->assertCreated();
+        $response = $this->putJson('/api/cart/products/2/increment');
+        $response->assertNotFound();
+        $response->assertExactJson([
+            "error" => "this product is not in the cart",
+            "code" => 404
+        ]);
+    }
     public function testDecrement()
     {
         Sanctum::actingAs(
@@ -74,5 +104,27 @@ class CartTest extends TestCase
         $response->assertCreated();
         $response = $this->putJson('/api/cart/products/1/decrement');
         $response->assertOk();
+    }
+    public function testFailureDecrement()
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        );
+        Product::factory()->count(3)->create();
+        $response = $this->postJson('/api/cart/products/1');
+        $response->assertCreated();
+        $response = $this->putJson('/api/cart/products/2/decrement');
+        $response->assertNotFound();
+        $response->assertExactJson([
+            "error" => "this product is already not in the cart",
+            "code" => 404
+        ]);
+        $response = $this->putJson('/api/cart/products/5/decrement');
+        $response->assertNotFound();
+        $response->assertExactJson([
+            "error" => "no model  product with this identifier",
+            "code" => 404
+        ]);
     }
 }
