@@ -88,4 +88,22 @@ class OrderTest extends TestCase
         $this->assertAuthenticated();
         $response->assertOk();
     }
+
+    public function testGetCancellationReasons()
+    {
+        OrderCancellationReason::create([
+            'reason_desc_en' => 'i changed my mind',
+            'reason_desc_ar' => 'غيرت رأيي',
+        ]);
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        );
+        $response = $this->getJson('/api/order/cancel/reasons', ['Accept' => 'application/json']);
+        $response->assertOk();
+        $response->assertExactJson([[
+            "id" => 1,
+            "cancel_reason" => 'i changed my mind'
+        ]]);
+    }
 }

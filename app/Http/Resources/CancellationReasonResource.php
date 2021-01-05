@@ -16,6 +16,7 @@ class CancellationReasonResource extends JsonResource
      */
     public function toArray($request)
     {
+        //dd(App::currentLocale());
         $reason = "reason_desc_" . App::currentLocale();
         return [
             'id' => $this->id,
