@@ -68,4 +68,24 @@ class OrderTest extends TestCase
         $response = $this->postJson('/api/order/1/cancel', $orderCancelData);
         $response->assertStatus(200);
     }
+
+    public function testGetOrder()
+    {
+        $this->withoutExceptionHandling();
+        PaymentMethod::create(
+            ['name' => 'credit'],
+            ['name' => 'cash'],
+        );
+        OrderStatus::create(
+            ['status_name_en' => 'ordered','status_name_ar' => 'مطلوب'],
+            ['status_name_en' => 'cancelled','status_name_ar' => 'ملغي'],
+        );
+        Sanctum::actingAs(
+            User::factory()->hasOrders(5)->create(),
+            ['*']
+        );
+        $response = $this->getJson('/api/orders');
+        $this->assertAuthenticated();
+        $response->assertOk();
+    }
 }

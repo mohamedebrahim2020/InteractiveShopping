@@ -23,8 +23,6 @@ class LoginTest extends TestCase
             User::factory()->create(),
             ['*']
         );
-        // dd($user->accessToken);
-        // $user->createToken($request->device_name)->plainTextToken;
         $this->withoutExceptionHandling();
         $response = $this->postJson('/api/login', ['email' => $user->email, 'password' => '123456789', 'device_name' => 'hima']);
         $response->assertJsonStructure([
