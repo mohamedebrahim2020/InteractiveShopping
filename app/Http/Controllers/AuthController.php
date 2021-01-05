@@ -37,26 +37,14 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
 
-        if (!$user) {
+        if (!$user || !Hash::check($request->password, $user->password, [])) {
             return response()->json(
                 [
-                'status_code' => 403,
-                'Message' => 'User not found. Please check your email',
+                'Message' => 'User not found. Please check your email or password',
                 ],
-                403
+                401
             );
         }
-
-        if (!Hash::check($request->password, $user->password, [])) {
-            return response()->json(
-                [
-                'status_code' => 403,
-                'Message' => 'Please check your email or password',
-                ],
-                403
-            );
-        }
-
         $token = $user->createToken($request->device_name)->plainTextToken;
 
         return response()->json(
