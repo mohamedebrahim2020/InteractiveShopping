@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Address;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OrderFactory extends Factory
@@ -26,7 +27,8 @@ class OrderFactory extends Factory
             'total_price' => $this->faker->randomDigit,
             'payment_id' => 1,
             'address_id' => Address::factory(),
-            'delivery_at' => $this->faker->date ,
+            'delivery_at' => "21-01-07 08:00:01",
+            //Carbon::createFromFormat('Y-m-d H:i:s', "21-01-07 08:00:01"),
             'order_status_id' => 1,
         ];
     }

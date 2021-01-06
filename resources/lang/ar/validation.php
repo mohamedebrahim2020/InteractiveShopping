@@ -118,6 +118,7 @@ return [
     'uploaded' => 'The :attribute failed to upload.',
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
+    'CheckUserCredit' => 'لا يوجد رصيد كافي',
     'cancellation_ability' => ' لا تستطيع إلغاء الطلب قبل ٢٤من تاريخ التوصيل  ',
     'order_status' => 'لا يمكن تقييم الطلب الا عند الوصول',
     'review_authorization' => 'لا يسمح للمستخدم بتقييم هذا الطلب',

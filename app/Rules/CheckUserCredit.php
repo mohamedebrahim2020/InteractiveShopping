@@ -46,6 +46,6 @@ class CheckUserCredit implements Rule
      */
     public function message()
     {
-         return Lang::get('validation.required');
+         return Lang::get('validation.CheckUserCredit');
     }
 }

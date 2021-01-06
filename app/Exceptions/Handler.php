@@ -71,7 +71,7 @@ class Handler extends ExceptionHandler
             // dd($exception->getMessage());
             return $this->errorResponse($exception->getMessage(), 404);
         }
-        $this->invalidJson($request, $exception);
+        // $this->invalidJson($request, $exception);
         return parent::render($request, $exception);
     }
 }

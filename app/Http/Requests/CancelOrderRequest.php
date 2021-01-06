@@ -28,7 +28,7 @@ class CancelOrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'cancel_reason_id' => ['required', 'exists:cancel_order_reasons,id', new CheckCancellationAbility()],
+            'cancel_reason_id' => ['required', 'exists:cancel_order_reasons,id', new CheckCancellationAbility($this->route('order'))],
             'other_reason' => 'required_if:cancel_reason_id,4',
         ];
     }

@@ -9,14 +9,15 @@ use Illuminate\Support\Facades\Lang;
 
 class CheckCancellationAbility implements Rule
 {
+    public $id;
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($id)
     {
-        //
+        $this->id = $id;
     }
 
     /**
@@ -28,7 +29,7 @@ class CheckCancellationAbility implements Rule
      */
     public function passes($attribute, $value)
     {
-        $order = Order::findorfail($value);
+        $order = Order::findorfail($this->id);
         $time = Carbon::now()->diffInMinutes($order->delivery_at);
         return ($time >= 1440);
     }

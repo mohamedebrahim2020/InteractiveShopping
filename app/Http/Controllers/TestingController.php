@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\OrderRequest;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\PaymentMethod;
 use Carbon\Carbon;
 use Facade\Ignition\Support\FakeComposer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TestingController extends Controller
 {
@@ -30,8 +32,17 @@ class TestingController extends Controller
     //     //echo Carbon::($order->delivery_at);
     //     echo Carbon::parse($order->delivery_at)->format('l');
     //     echo Carbon::now()->format('l');
-    $va = new FakeComposer();
+//     $va = new FakeComposer();
     
-         dd($va->faker);
+//          dd($va->faker);
+
+          // PaymentMethod::createMany([
+          // ['name' => 'credit'],
+          // ['name' => 'cash'],
+          // ]);
+          PaymentMethod::insert([
+               ['name' => 'credit'],
+               ['name' => 'cash'],
+           ]);
     }
 }
