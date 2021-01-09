@@ -22,8 +22,9 @@ class ReviewOrderService
         return $tags;
     }
 
-    public function submitReview($order, $data)
+    public function submitReview($data)
     {
+        $order = $this->order->find($data->order);
         $this->order->addReview($order, $data->rate_id, $data->comment);
         $this->order->attachTags($order, $data->tag_id);
     }

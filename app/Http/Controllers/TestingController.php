@@ -6,6 +6,7 @@ use App\Http\Requests\OrderRequest;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\PaymentMethod;
+use App\Models\User;
 use Carbon\Carbon;
 use Facade\Ignition\Support\FakeComposer;
 use Illuminate\Http\Request;
@@ -40,9 +41,15 @@ class TestingController extends Controller
           // ['name' => 'credit'],
           // ['name' => 'cash'],
           // ]);
-          PaymentMethod::insert([
-               ['name' => 'credit'],
-               ['name' => 'cash'],
-           ]);
+        //   PaymentMethod::insert([
+        //        ['name' => 'credit'],
+        //        ['name' => 'cash'],
+        //    ]);
+        //    $date =  (Carbon::now()->addDays(2)->isFriday()) ? Carbon::now()->addDays(3) : Carbon::now()->addDays(2);
+        //    dd($date);
+
+        $dt = Carbon::parse('this friday');
+        echo $dt;
+
     }
 }

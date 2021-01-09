@@ -2,15 +2,17 @@
 
 namespace Tests\Feature;
 
-use App\Models\Address;
-use App\Models\OrderCancellationReason;
-use App\Models\OrderStatus;
-use App\Models\PaymentMethod;
 use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
+use Database\Seeders\OrderCancellationReasonSeeder;
+use Database\Seeders\OrderStatusSeeder;
+use Database\Seeders\PaymentMethodSeeder;
+use Database\Seeders\RateSeeder;
+use Database\Seeders\TagCategorySeeder;
+use Database\Seeders\TagSeeder;
+use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -18,13 +20,10 @@ class OrderTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testCreateOrder()
+    /** @test */
+    public function successful_create_order()
     {
-        $this->withoutExceptionHandling();
-        PaymentMethod::insert([
-            ['name' => 'credit'],
-            ['name' => 'cash'],
-        ]);
+        $this->seed(PaymentMethodSeeder::class);
         Sanctum::actingAs(
             User::factory()->hasAddresses(3)->create(),
             ['*']
@@ -35,60 +34,79 @@ class OrderTest extends TestCase
             "address_id" => 1,
             "delivery_at" => "21-01-06 08:00:01",
         ];
-
-        $response = $this->postJson('/api/cart/products/1');
-        $response->assertStatus(201);
-        $response->assertSuccessful();
+        $product = Product::findorfail(1);
+        $cartSession = Cart::instance('main');
+        $cartSession->add($product->id, $product->name, 1, $product->price)
+        ->associate('\App\Models\Product');
+        $cartSession->store(auth()->user()->id);
         $response = $this->postJson('/api/orders', $orderData, ['Accept' => 'application/json']);
         $response->assertStatus(201);
     }
-    public function testFailureCreatedOrder()
+    /** @test */
+    public function not_enough_credit_to_place_order()
     {
-        PaymentMethod::insert([
-            ['name' => 'credit'],
-            ['name' => 'cash'],
-        ]);
+        $this->seed(PaymentMethodSeeder::class);
         Sanctum::actingAs(
             User::factory()->hasAddresses(3)->create(),
             ['*']
         );
         Product::factory()->create();
+        $date = (Carbon::now()->addDays(2)->isFriday()) ? Carbon::now()->addDays(3) : Carbon::now()->addDays(2);
         $orderData = [
             "payment_id" => 1,
-            "address_id" => "",
-            "delivery_at" => "21-01-08 08:00:01",
+            "address_id" => 1,
+            "delivery_at" => $date,
         ];
-
-        $response = $this->postJson('/api/cart/products/1');
-        $response->assertStatus(201);
-        $response->assertSuccessful();
+        $product = Product::findorfail(1);
+        $cartSession = Cart::instance('main');
+        $cartSession->add($product->id, $product->name, 1, $product->price)
+        ->associate('\App\Models\Product');
+        $cartSession->store(auth()->user()->id);
         $response = $this->postJson('/api/orders', $orderData, ['Accept' => 'application/json']);
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['payment_id', 'address_id', 'delivery_at']);
+        $response->assertJsonValidationErrors(['payment_id']);
         $response->assertExactJson([
             "message" =>  "The given data was invalid.",
             "errors" => [
-                "address_id" => ["The address id field is required."],
-                "delivery_at" => ["not allowed to deliver products on holiday"],
                 "payment_id" => ["not enough credit"]
             ]
         ]);
     }
-    public function testCancelOrder()
+    /** @test */
+    public function delivery_date_cannot_be_in_friday()
     {
-        $this->withoutExceptionHandling();
-        PaymentMethod::insert([
-            ['name' => 'credit'],
-            ['name' => 'cash'],
-        ]);
-        OrderStatus::insert([
-            ['status_name_en' => 'ordered','status_name_ar' => 'مطلوب'],
-            ['status_name_en' => 'cancelled','status_name_ar' => 'ملغي'],
-        ]);
-        OrderCancellationReason::create([
-            'reason_desc_en' => 'i changed my mind',
-            'reason_desc_ar' => 'غيرت رأيي',
-        ]);
+            $this->seed(PaymentMethodSeeder::class);
+            Sanctum::actingAs(
+                User::factory()->hasAddresses(3)->create(),
+                ['*']
+            );
+            Product::factory()->create();
+            $orderData = [
+                "payment_id" => 2,
+                "address_id" => 1,
+                "delivery_at" => Carbon::parse('this friday'),
+            ];
+            $product = Product::findorfail(1);
+            $cartSession = Cart::instance('main');
+            $cartSession->add($product->id, $product->name, 1, $product->price)
+            ->associate('\App\Models\Product');
+            $cartSession->store(auth()->user()->id);
+            $response = $this->postJson('/api/orders', $orderData, ['Accept' => 'application/json']);
+            $response->assertStatus(422);
+            $response->assertJsonValidationErrors(['delivery_at']);
+            $response->assertExactJson([
+                "message" =>  "The given data was invalid.",
+                "errors" => [
+                    "delivery_at" => ["not allowed to deliver products on holiday"],
+                ]
+            ]);
+    }
+    /** @test */
+    public function successful_cancel_order()
+    {
+        $this->seed(PaymentMethodSeeder::class);
+        $this->seed(OrderStatusSeeder::class);
+        $this->seed(OrderCancellationReasonSeeder::class);
         Sanctum::actingAs(
             User::factory()->hasOrders(1)->create(),
             ['*']
@@ -99,20 +117,12 @@ class OrderTest extends TestCase
         $response = $this->postJson('/api/order/1/cancel', $orderCancelData);
         $response->assertStatus(200);
     }
-    public function testFailureCancel()
+    /** @test */
+    public function fail_to_cancel_order_before_one_day_from_delivery_date()
     {
-        PaymentMethod::insert([
-            ['name' => 'credit'],
-            ['name' => 'cash'],
-        ]);
-        OrderStatus::insert([
-            ['status_name_en' => 'ordered','status_name_ar' => 'مطلوب'],
-            ['status_name_en' => 'cancelled','status_name_ar' => 'ملغي'],
-        ]);
-        OrderCancellationReason::create([
-            'reason_desc_en' => 'i changed my mind',
-            'reason_desc_ar' => 'غيرت رأيي',
-        ]);
+        $this->seed(PaymentMethodSeeder::class);
+        $this->seed(OrderStatusSeeder::class);
+        $this->seed(OrderCancellationReasonSeeder::class);
         Sanctum::actingAs(
             User::factory()->hasOrders(1, ['delivery_at' => Carbon::now()->addHours(20)])->create(),
             ['*']
@@ -129,17 +139,11 @@ class OrderTest extends TestCase
             ]
         ]);
     }
-    public function testGetOrder()
+    /** @test */
+    public function successfull_get_orders()
     {
-        $this->withoutExceptionHandling();
-        PaymentMethod::insert([
-            ['name' => 'credit'],
-            ['name' => 'cash'],
-        ]);
-        OrderStatus::create(
-            ['status_name_en' => 'ordered','status_name_ar' => 'مطلوب'],
-            ['status_name_en' => 'cancelled','status_name_ar' => 'ملغي'],
-        );
+        $this->seed(PaymentMethodSeeder::class);
+        $this->seed(OrderStatusSeeder::class);
         Sanctum::actingAs(
             User::factory()->hasOrders(5)->create(),
             ['*']
@@ -148,22 +152,40 @@ class OrderTest extends TestCase
         $this->assertAuthenticated();
         $response->assertOk();
     }
-
-    public function testGetCancellationReasons()
+    /** @test */
+    public function successfull_get_cancellation_reasons()
     {
-        OrderCancellationReason::create([
-            'reason_desc_en' => 'i changed my mind',
-            'reason_desc_ar' => 'غيرت رأيي',
-        ]);
+        $this->seed(OrderCancellationReasonSeeder::class);
         Sanctum::actingAs(
             User::factory()->create(),
             ['*']
         );
         $response = $this->getJson('/api/order/cancel/reasons', ['Accept' => 'application/json']);
         $response->assertOk();
-        $response->assertExactJson([[
-            "id" => 1,
-            "cancel_reason" => 'i changed my mind'
+        $response->assertJsonStructure([[
+            "id",
+            "cancel_reason"
         ]]);
+    }
+    /** @test */
+    public function successful_review_order()
+    {
+        $this->seed(PaymentMethodSeeder::class);
+        $this->seed(OrderStatusSeeder::class);
+        $this->seed(OrderCancellationReasonSeeder::class);
+        $this->seed(TagCategorySeeder::class);
+        $this->seed(TagSeeder::class);
+        $this->seed(RateSeeder::class);
+        Sanctum::actingAs(
+            User::factory()->hasOrders(1, ['order_status_id' => 3])->create(),
+            ['*']
+        );
+        $reviewOrderData = [
+            "rate_id" => 1,
+            "tag_id" => [1,2],
+            "comment" => "not a good product",
+        ];
+        $response = $this->postJson('/api/order/1/review', $reviewOrderData, ['Accept' => 'application/json']);
+        $response->assertCreated();
     }
 }

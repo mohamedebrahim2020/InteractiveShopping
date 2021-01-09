@@ -64,7 +64,6 @@ class Handler extends ExceptionHandler
             return $this->errorResponse("no model  {$modelname} with this identifier", 404);
         }
         if ($exception instanceof NotFoundHttpException) {
-            // dd($exception->getMessage());
             return $this->errorResponse($exception->getMessage(), 404);
         }
         if ($exception instanceof BadMethodCallException) {

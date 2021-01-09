@@ -23,12 +23,12 @@ class OrderFactory extends Factory
      */
     public function definition()
     {
+        $date = (Carbon::now()->addDays(2)->isFriday()) ? Carbon::now()->addDays(3) : Carbon::now()->addDays(2);
         return [
             'total_price' => $this->faker->randomDigit,
             'payment_id' => 1,
             'address_id' => Address::factory(),
-            'delivery_at' => "21-01-07 08:00:01",
-            //Carbon::createFromFormat('Y-m-d H:i:s', "21-01-07 08:00:01"),
+            'delivery_at' => $date,
             'order_status_id' => 1,
         ];
     }

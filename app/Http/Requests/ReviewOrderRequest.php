@@ -16,7 +16,7 @@ class ReviewOrderRequest extends FormRequest
      */
     public function authorize()
     {
-        $order = Order::findorfail($this->route('order'));
+        $order = Order::findorfail($this->order);
         return ($order->user_id == $this->user()->id && $order->order_status_id == 3);
     }
 
@@ -28,7 +28,7 @@ class ReviewOrderRequest extends FormRequest
     public function rules()
     {
         return [
-h            'rate_id' => 'nullable||exists:rates,rank',
+            'rate_id' => 'nullable||exists:rates,rank',
             'tag_id[]' => 'nullable||exists:tags,id',
             'comment' => 'nullable',
         ];

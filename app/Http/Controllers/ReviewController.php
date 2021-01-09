@@ -21,9 +21,9 @@ class ReviewController extends Controller
         $response = $this->reviewOrder->getTags($rate);
         return response()->json($response);
     }
-    public function reviewOrder(Order $order, ReviewOrderRequest $request)
+    public function review(ReviewOrderRequest $request)
     {
-        $this->reviewOrder->submitReview($order, $request);
+        $this->reviewOrder->submitReview($request);
         return response()->json(null, Response::HTTP_CREATED);
     }
 }

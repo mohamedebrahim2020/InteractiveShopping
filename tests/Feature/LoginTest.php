@@ -13,17 +13,11 @@ class LoginTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * A basic feature testLogin example.
-     *
-     * @return void
-     */
-    public function testSuccessful()
+    * @test
+    */
+    public function successful_login()
     {
-        $user =  Sanctum::actingAs(
-            User::factory()->create(),
-            ['*']
-        );
-        $this->withoutExceptionHandling();
+        $user = User::factory()->create();
         $response = $this->postJson('/api/login', ['email' => $user->email, 'password' => '123456789', 'device_name' => 'hima']);
         $response->assertJsonStructure([
             'status_code'  ,
@@ -34,28 +28,24 @@ class LoginTest extends TestCase
         $response->assertStatus(200);
         $response->assertOk();
     }
-
-    public function testFailedAuthorization()
+    /**
+    * @test
+    */
+    public function failed_login_authorization_with_wrong_password()
     {
-        $user =  Sanctum::actingAs(
-            User::factory()->create(),
-            ['*']
-        );
-        $this->withoutExceptionHandling();
+        $user = User::factory()->create();
         $response = $this->postJson('/api/login', ['email' => $user->email, 'password' => '123456', 'device_name' => 'hima']);
         $response->assertUnauthorized();
         $response->assertExactJson([
             'Message' => 'User not found. Please check your email or password',
         ]);
     }
-
-    public function testFailedValidation()
+    /**
+    * @test
+    */
+    public function failed_login_validation_with_wrong_mail_password()
     {
-        $user =  Sanctum::actingAs(
-            User::factory()->create(),
-            ['*']
-        );
-        //$this->withoutExceptionHandling();
+        User::factory()->create();
         $response = $this->postJson('/api/login', ['email' => 'djdj', 'password' => '123', 'device_name' => 'hima'], ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['email','password']);
