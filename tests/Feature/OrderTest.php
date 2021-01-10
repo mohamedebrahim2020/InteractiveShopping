@@ -20,10 +20,20 @@ class OrderTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function setup() : void 
+    {
+        parent::setUp();
+        $this->seed(PaymentMethodSeeder::class);
+        $this->seed(OrderStatusSeeder::class);
+        $this->seed(OrderCancellationReasonSeeder::class);
+        $this->seed(TagCategorySeeder::class);
+        $this->seed(TagSeeder::class);
+        $this->seed(RateSeeder::class);
+
+    }
     /** @test */
     public function successful_create_order()
     {
-        $this->seed(PaymentMethodSeeder::class);
         Sanctum::actingAs(
             User::factory()->hasAddresses(3)->create(),
             ['*']
@@ -45,7 +55,6 @@ class OrderTest extends TestCase
     /** @test */
     public function not_enough_credit_to_place_order()
     {
-        $this->seed(PaymentMethodSeeder::class);
         Sanctum::actingAs(
             User::factory()->hasAddresses(3)->create(),
             ['*']
@@ -75,7 +84,6 @@ class OrderTest extends TestCase
     /** @test */
     public function delivery_date_cannot_be_in_friday()
     {
-            $this->seed(PaymentMethodSeeder::class);
             Sanctum::actingAs(
                 User::factory()->hasAddresses(3)->create(),
                 ['*']
@@ -104,9 +112,6 @@ class OrderTest extends TestCase
     /** @test */
     public function successful_cancel_order()
     {
-        $this->seed(PaymentMethodSeeder::class);
-        $this->seed(OrderStatusSeeder::class);
-        $this->seed(OrderCancellationReasonSeeder::class);
         Sanctum::actingAs(
             User::factory()->hasOrders(1)->create(),
             ['*']
@@ -120,9 +125,6 @@ class OrderTest extends TestCase
     /** @test */
     public function fail_to_cancel_order_before_one_day_from_delivery_date()
     {
-        $this->seed(PaymentMethodSeeder::class);
-        $this->seed(OrderStatusSeeder::class);
-        $this->seed(OrderCancellationReasonSeeder::class);
         Sanctum::actingAs(
             User::factory()->hasOrders(1, ['delivery_at' => Carbon::now()->addHours(20)])->create(),
             ['*']
@@ -142,8 +144,6 @@ class OrderTest extends TestCase
     /** @test */
     public function successfull_get_orders()
     {
-        $this->seed(PaymentMethodSeeder::class);
-        $this->seed(OrderStatusSeeder::class);
         Sanctum::actingAs(
             User::factory()->hasOrders(5)->create(),
             ['*']
@@ -170,12 +170,6 @@ class OrderTest extends TestCase
     /** @test */
     public function successful_review_order()
     {
-        $this->seed(PaymentMethodSeeder::class);
-        $this->seed(OrderStatusSeeder::class);
-        $this->seed(OrderCancellationReasonSeeder::class);
-        $this->seed(TagCategorySeeder::class);
-        $this->seed(TagSeeder::class);
-        $this->seed(RateSeeder::class);
         Sanctum::actingAs(
             User::factory()->hasOrders(1, ['order_status_id' => 3])->create(),
             ['*']

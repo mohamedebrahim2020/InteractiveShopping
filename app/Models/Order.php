@@ -44,5 +44,4 @@ class Order extends Model
     {
         return $this->belongsTo(OrderCancellationReason::class, 'cancel_reason_id');
     }
-
 }

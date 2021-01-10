@@ -34,7 +34,7 @@ class TestingController extends Controller
     //     echo Carbon::parse($order->delivery_at)->format('l');
     //     echo Carbon::now()->format('l');
 //     $va = new FakeComposer();
-    
+
 //          dd($va->faker);
 
           // PaymentMethod::createMany([
@@ -50,6 +50,5 @@ class TestingController extends Controller
 
         $dt = Carbon::parse('this friday');
         echo $dt;
-
     }
 }
