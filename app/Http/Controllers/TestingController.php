@@ -28,6 +28,7 @@ class TestingController extends Controller
     //         echo $value[2];
     //     }
     //     $order = Order::findorfail(22);
+    //     //echo Carbon::($order->delivery_at);
     //     echo Carbon::parse($order->delivery_at)->format('l');
     //     echo Carbon::now()->format('l');
 //     $va = new FakeComposer();
