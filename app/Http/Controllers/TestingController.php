@@ -32,7 +32,6 @@ class TestingController extends Controller
     //     echo Carbon::now()->format('l');
 //     $va = new FakeComposer();
 
-// himaaaaaa
 
           // PaymentMethod::createMany([
           // ['name' => 'credit'],
